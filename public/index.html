@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>校园场景在线展示系统</title>
+  <script src="./Build/Cesium/Cesium.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+  <link href="./Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./stylesheets/index.css" />
+  <!-- icon -->
+  <link rel="icon" href="./favicon.ico">
+  <!-- layui -->
+  <link rel="stylesheet" href="./layui/css/layui.css">
+  <script src="./layui/layui.js"></script>
+</head>
+
+<body>
+  <!--顶部导航栏-->
+  <input type="checkbox" name="checkbox" id="check">
+  <label for="check" class="cl">
+    <i class="layui-icon layui-icon-circle-dot" id="showbtn"></i>
+    <i class="layui-icon layui-icon-close-fill" id="closebtn"></i>
+
+  </label>
+  <!-- 搜索框 -->
+  <div class="searh-box">
+    <input type="text" class="search_input" id="search_input" placeholder="输入想搜索的.." autocomplete="off">
+
+    <a href="#" class="search-btn">
+      <i class="layui-icon layui-icon-search"></i>
+    </a>
+    <div class="search_list">
+      <ul id="search_list">
+      </ul>
+    </div>
+  </div>
+
+  <div class="top-container">
+    <div class="colse-div">
+    </div>
+    <ul id="menu" class="layui-nav layui-nav-tree layui-bg-cyan" lay-filter="nav">
+      <li class="drawing layui-nav-item">
+        <!-- layui-nav-itemed -->
+        <a href="#" class="li-btn">
+          <i class="layui-icon layui-icon-theme"></i> 作图
+        </a>
+        <dl class="layui-nav-child">
+          <dd class="line"><a href="#">
+              <i class="layui-icon layui-icon-more"></i> 线
+            </a></dd>
+          <dd class="poly"><a href="#">
+              <i class="layui-icon layui-icon-circle"></i> 面
+            </a></dd>
+          <dd class="pick"><a href="#">
+              <i class="layui-icon layui-icon-radio"></i> 选取图形
+            </a></dd>
+          <dd>
+            <a class="search_a li-btn" href="#">
+              <i class="layui-icon layui-icon-search"></i> 查询所有
+            </a>
+          </dd>
+          <dd class="clean">
+            <a href="#">
+              <i class="layui-icon layui-icon-delete"></i> 清除所有
+            </a>
+          </dd>
+          <!-- 
+          <dd class="lc-list test "><a href="#">
+              <i class="layui-icon layui-icon-about"></i> Test
+            </a></dd>
+          <dd class="lc-list test2 "><a href="#">
+              <i class="layui-icon layui-icon-about"></i> Test2
+            </a></dd> -->
+
+        </dl>
+      </li>
+      <!--  -->
+      <li class="model_li layui-nav-item">
+        <a href="#" class="li-btn">
+          <i class="layui-icon layui-icon-templeate-1"></i> 模型
+        </a>
+        <dl class="layui-nav-child">
+          <dd class="model_a"><a href="#">
+              <i class="layui-icon layui-icon-loading"></i> 加载模型
+            </a></dd>
+
+        </dl>
+      </li>
+      <li class="camera-tutor layui-nav-item">
+        <a href="#" class="li-btn">
+          <i class="layui-icon layui-icon-video"></i> 镜头控制
+        </a>
+      </li>
+      <li class="add layui-nav-item">
+        <a href="#" class="li-btn">
+          <i class="layui-icon layui-icon-add-1"></i> 添加图形
+        </a>
+      </li>
+      <li class="layui-nav-item">
+        <a class="path_roaming li-btn" href="#">
+          <i class="layui-icon layui-icon-location"></i> 路径漫游
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+  <!-- positions -->
+  <div class="layui-hide" id="pick_position" style="padding:20px;">
+    <form class="layui-form " action="" id="position_form" lay-filter="position_form">
+      <!-- id -->
+      <div class="layui-form-item" pane>
+        <label class="layui-form-label">Id:</label>
+        <div class="layui-input-block">
+          <input type="text" name="id" lay-verify="required" id="shape_id" autocomplete="off" placeholder="..."
+            class="layui-input">
+        </div>
+      </div>
+      <!-- name -->
+      <div class="layui-form-item" pane>
+        <label class="layui-form-label">Name:</label>
+        <div class="layui-input-block">
+          <input type="text" name="name" lay-verify="required" id="shape_name" autocomplete="off" placeholder="..."
+            class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item" pane>
+        <div class="layui-input-block">
+          <button type="button" class="layui-btn" lay-submit lay-filter="save_position_btn">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- add -->
+  <div class="layui-hide" id="add_Shape" style="padding:20px;">
+    <form class="layui-form " action="" id="save_form" lay-filter="save_form">
+      <!-- id -->
+      <div class="layui-form-item" pane>
+        <label class="layui-form-label">Id:</label>
+        <div class="layui-input-block">
+          <input type="text" name="id" lay-verify="required" id="save_id" autocomplete="off" placeholder="..."
+            class="layui-input">
+        </div>
+      </div>
+      <!-- name -->
+      <div class="layui-form-item" pane>
+        <label class="layui-form-label">Name:</label>
+        <div class="layui-input-block">
+          <input type="text" name="name" lay-verify="required" id="save_name" autocomplete="off" placeholder="..."
+            class="layui-input">
+        </div>
+      </div>
+      <!-- Describe -->
+      <div class="layui-form-item" pane>
+        <label class="layui-form-label">Describe:</label>
+        <div class="layui-input-block">
+          <input type="text" name="describe" lay-verify="required" id="describe" autocomplete="off" placeholder="..."
+            class="layui-input">
+        </div>
+      </div>
+      <!-- type -->
+      <div class="layui-form-item" pane>
+        <label class="layui-form-label">Type:</label>
+        <div class="layui-input-inline">
+          <select name="type" lay-verify="required" lay-search="">
+            <option value="">直接选择或搜索选择</option>
+            <option value="polyline">polyline</option>
+            <option value="polygon">polygon</option>
+          </select>
+        </div>
+
+      </div>
+      <div class="layui-form-item" pane>
+        <div class="layui-input-block">
+          <button type="button" class="layui-btn" lay-submit="" lay-filter="save_btn">Save</button>
+          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div id="slider">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+      <legend>X轴</legend>
+    </fieldset>
+    <div id="slideTest" class="demo-slider"></div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+      <legend>Y轴</legend>
+    </fieldset>
+    <div id="slideTest2" class="demo-slider"></div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+      <legend>Z轴</legend>
+    </fieldset>
+    <div id="slideTest3" class="demo-slider"></div>
+  </div>
+
+
+
+  <table id="search_shape_table" lay-filter="search_shape_table">
+  </table>
+
+
+
+  <table id="search_model_table" lay-filter="search_model_table">
+  </table>
+  <script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+      <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+      <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+      <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+    </div>
+  </script>
+
+  <!--Cesium -->
+  <div id="cesiumContainer"></div>
+</body>
+<script type="text/javascript" src="./javascripts/PathRoaming.js"></script>
+<script type="text/javascript" src="./javascripts/WGS84_to_GCJ02.js"></script>
+<script type="text/javascript" src="./javascripts/SearchByName.js"></script>
+<script type="text/javascript" src="./javascripts/index.js"></script>
+<script type="text/javascript" src="./javascripts/CameraFly.js"></script>
+<script type="text/javascript" src="./javascripts/GetKMZ.js"></script>
+<script type="text/javascript" src="./javascripts/Draw.js"></script>
+<script type="text/javascript" src="./javascripts/SearchShape.js"></script>
+<script type="text/javascript" src="./javascripts/CameraTurorial.js"></script>
+<script type="text/javascript" src="./javascripts/LoadingGLTF.js"></script>
+<script>
+  $(function () {
+    $(".cesium-widget-credits").css("display", "none");
+  });
+</script>
+
+</html>

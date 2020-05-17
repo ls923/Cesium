@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>校园场景在线展示系统</title>
+    <script src="/Build/Cesium/Cesium.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <link href="/Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/stylesheets/index.css" />
+    <!-- layui -->
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/layui/layui.js"></script>
+    <!-- icons  -->
+    <!-- <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script> -->
+</head>
+
+<body>
+    <!--顶部导航栏-->
+    <input type="checkbox" name="checkbox" id="check">
+    <label for="check" class="cl">
+        <i class="layui-icon layui-icon-circle-dot" id="showbtn"></i>
+        <i class="layui-icon layui-icon-close-fill" id="closebtn"></i>
+
+    </label>
+    <!-- 搜索框 -->
+    <div class="searh-box">
+        <input type="text" class="search_input" id="search_input" placeholder="输入想搜索的..">
+
+        <a href="#" class="search-btn">
+            <i class="layui-icon layui-icon-search"></i>
+        </a>
+        <div class="search_list">
+            <ul id="search_list">
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="top-container">
+        <div class="colse-div">
+        </div>
+        <ul id="menu" class="layui-nav layui-nav-tree layui-bg-cyan" lay-filter="nav">
+            <li class="drawing layui-nav-item layui-nav-itemed">
+                <a href="#" class="li-btn">
+                    <i class="layui-icon layui-icon-theme"></i> Drawing
+                </a>
+                <dl class="layui-nav-child">
+                    <dd class="line"><a href="#">
+                            <i class="layui-icon layui-icon-more"></i> Line
+                        </a></dd>
+                    <dd class="poly"><a href="#">
+                            <i class="layui-icon layui-icon-circle"></i> Poly
+                        </a></dd>
+                    <dd class="pick"><a href="#">
+                            <i class="layui-icon layui-icon-radio"></i> Pick
+                        </a></dd>
+                    <dd class="clean">
+                        <a href="#">
+                            <i class="layui-icon layui-icon-delete"></i> Clean
+                        </a>
+                    </dd>
+                    <dd class="lc-list test "><a href="#">
+                            <i class="layui-icon layui-icon-about"></i> Test
+                        </a></dd>
+                    <dd class="lc-list test2 "><a href="#">
+                            <i class="layui-icon layui-icon-about"></i> Test2
+                        </a></dd>
+
+                </dl>
+            </li>
+            <!--  -->
+            <li class="model_li layui-nav-item">
+                <a href="#" class="li-btn">
+                    <i class="layui-icon layui-icon-templeate-1"></i> Model
+                </a>
+                <dl class="layui-nav-child">
+                    <dd class="model_a "><a href="#">
+                            <i class="layui-icon layui-icon-loading"></i> Loading Model
+                        </a></dd>
+                </dl>
+            </li>
+            <li class="camera-tutor layui-nav-item">
+                <a href="#" class="li-btn">
+                    <i class="layui-icon layui-icon-video"></i> Camera Control
+                </a>
+            </li>
+            <li class="add layui-nav-item">
+                <a href="#" class="li-btn">
+                    <i class="layui-icon layui-icon-add-1"></i> Add Shape
+                </a>
+            </li>
+            <li class="layui-nav-item">
+                <a class="search_a li-btn" href="#">
+                    <i class="layui-icon layui-icon-search"></i> Search All
+                </a>
+            </li>
+            <li class="layui-nav-item">
+                <a class="path_roaming li-btn" href="#">
+                    <i class="layui-icon layui-icon-location"></i> Path Roaming
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!--提示框-->
+    <div class="tips" id="tips">
+        <span>点击</span>
+        <span class="left-click-tips">鼠标左键</span>
+        <span>创建点,</span>
+        <span class="right-click-tips">鼠标右键</span>
+        <span>结束作图</span>
+        <a href="#" class="close-tips">×</a>
+    </div>
+    <div>
+        <div class="tips" id="tips_error">
+            <span>没有选中Entity哦！</span>
+            <a href="#" class="close-tips">×</a>
+        </div>
+        <div class="tips" id="tips_cancel">
+            <span>已经取消选择！</span>
+            <a href="#" class="close-tips">×</a>
+        </div>
+        <div class="tips" id="tips_insert_success">
+            <span></span>
+            <a href="#" class="close-tips">×</a>
+        </div>
+    </div>
+
+
+
+
+    <!-- positions -->
+    <div class="positions">
+        <button class="positions-close" value="" id="positions_close">
+            <span>×</span>
+        </button>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="shape_id" class="col-sm-2 control-label">Id:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="shape_id" placeholder="..." readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="shape_name" class="col-sm-2 control-label">Name:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="shape_name" placeholder="...">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-1">
+                    <button class="btn btn-default" id="position_save_btn">Save</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+
+    <!--添加 Shape-->
+    <div class="addShape">
+        <button class="addShape-close" value=""><span>×</span></button>
+
+        <form class="form-horizontal" id="save_form">
+
+            <div class="form-group">
+                <label for="id" class="col-sm-2 control-label">Id:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="id" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">Name:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="name" placeholder="...">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="describe" class="col-sm-2 control-label">Describe:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="describe" placeholder="...">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="type" class="col-sm-2 control-label">Type:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="type" placeholder="...">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-1">
+                    <button class="btn btn-default" id="save_point_btn">Save</button>
+                </div>
+            </div>
+        </form>
+
+        <a class="search_a" href="#">Search All</a>
+    </div>
+
+
+    <!--Search 结果显示-->
+    <div class="search">
+        <button class="search-close" value=""><span>×</span></button>
+        <table class="search-f">
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Options</th>
+            </tr>
+            <tbody class="search-tb"></tbody>
+        </table>
+    </div>
+
+
+
+    <!--model search 结果显示  -->
+    <div class="search-model">
+        <button class="search-close-model" value=""><span>×</span></button>
+
+        <table id="search_model_table">
+        </table>
+
+        <table class="search-f-model">
+            <thead>
+                <tr>
+                    <th>Show</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+
+            <tbody class="search-tb-model"></tbody>
+        </table>
+        <nav aria-label="...">
+            <ul class="pager" style=" text-align: justify;">
+                <li class="pre"><a href="#">Previous</a></li>
+                <li class="next"><a href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+
+
+
+    <!--Cesium -->
+    <div id="cesiumContainer"></div>
+</body>
+<script type="text/javascript" src="/javascripts/PathRoaming.js"></script>
+<script type="text/javascript" src="/javascripts/WGS84_to_GCJ02.js"></script>
+<script type="text/javascript" src="/javascripts/layui_use.js"></script>
+<script type="text/javascript" src="/javascripts/index.js"></script>
+<script type="text/javascript" src="/javascripts/CameraFly.js"></script>
+<script type="text/javascript" src="/javascripts/GetKMZ.js"></script>
+<script type="text/javascript" src="/javascripts/Draw.js"></script>
+<script type="text/javascript" src="/javascripts/Search.js"></script>
+<script type="text/javascript" src="/javascripts/CameraTurorial.js"></script>
+<script type="text/javascript" src="/javascripts/LoadingGLTF.js"></script>
+<script>
+    $(function () {
+        $(".cesium-widget-credits").css("display", "none");
+
+        $(".search-close-model").click(function () {
+            $(".search-model").fadeOut();
+        });
+        $(".search-close").click(function () {
+            $(".search").fadeOut();
+        });
+
+        $(".add").click(function () {
+            // $(".addShape").fadeToggle();
+
+        });
+
+        $(".close-tips").click(function () {
+            $(".tips").fadeOut();
+        });
+        $(".addShape-close").click(function () {
+            $(".addShape").fadeOut();
+        });
+
+        $(".search_click").click(function () {
+            $(".search").fadeToggle();
+        });
+        $("#positions_close").click(function () {
+            $(".positions").fadeOut();
+        });
+    });
+</script>
+
+</html>
