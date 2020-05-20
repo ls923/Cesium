@@ -62,3 +62,9 @@ function gcj2wgs(arrdata) {
     return [jd, wd];
 
 }
+
+
+export {
+    wgs2gcj,
+    gcj2wgs
+};

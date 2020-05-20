@@ -213,13 +213,16 @@ function drawShowModel() {
     success: function (result) {
       var temp_model_id;
       for (let i = 0; i < result.length; i++) {
+        temp_model_id = result[i].model_id
         if (!isDrawed) {
-
-          temp_model_id = result[i].model_id
+          console.log("is Not Drawed");
+          console.log(temp_model_id);
           searchModelFromId(temp_model_id)
-        } else {
-          for (let j = 1; j < collection.length; j++) {
-            var p = collection.get(j)
+        } else if (isDrawed) {
+          console.log("is Drawed");
+          for (let j = 1; j < collection.length; ++j) {
+            var p = collection.get(j);
+            console.log(p.id._id);
             if (p.id._id == temp_model_id) {
               console.log("p", p)
             }
@@ -312,7 +315,10 @@ function Opensetting(data, model) {
       cancel: function () {
         //右上角关闭回调
         model_setting = null;
-        handler.destroy()
+        if (Cesium.defined(handler)) {
+          handler.destroy();
+        }
+
         handler = null;
         layer.msg("已退出 设置")
         //return false 开启该代码可禁止点击该按钮关闭
@@ -509,9 +515,6 @@ function searchAll_model() {
     });
   })
 }
-
-
-
 
 
 

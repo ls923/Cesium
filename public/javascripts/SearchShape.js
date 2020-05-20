@@ -31,11 +31,7 @@ function Show_shape(id, type) {
       console.log(result[0]);
       console.log("positions", JSON.parse(Object.values(result[0])[0]))
       var positions = JSON.parse(Object.values(result[0])[0]);
-      var arr = [];
-      for (let i in positions) {
 
-        arr.push(positions[i])
-      }
       console.log(positions[0])
       if (type == 'polyline') {
         viewer.entities.add({

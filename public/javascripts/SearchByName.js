@@ -1,3 +1,8 @@
+import {
+  wgs2gcj,
+  gcj2wgs
+} from "./WGS84_to_GCJ02.js"
+
 layui.use(['layer', 'table', 'element'], function () {
   var element = layui.element; // 导航的hover效果、二级菜单等功能，需要依赖element模块
   var layer = layui.layer

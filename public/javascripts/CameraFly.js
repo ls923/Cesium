@@ -1,4 +1,9 @@
 // 3.flyto
+import {
+  wgs2gcj,
+  gcj2wgs
+} from "./WGS84_to_GCJ02.js"
+
 const initPosition = [115.827729, 28.649887]
 console.log(gcj2wgs(initPosition));
 var init_position = gcj2wgs(initPosition)

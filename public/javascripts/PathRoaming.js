@@ -1,5 +1,11 @@
+import {
+    wgs2gcj,
+    gcj2wgs
+} from "./WGS84_to_GCJ02.js"
+
+
 $(".path_roaming").click(function () {
-    layer.msg('鼠标左键选择两个点，右键开始路径规划！', {
+    layer.msg('鼠标左键选择两个点，开始路径规划！', {
         time: 1500,
         anim: 0
     }, function () {
