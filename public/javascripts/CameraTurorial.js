@@ -1,7 +1,9 @@
 $(function () {
   $(".camera-tutor a").click(function () {
-    $("#tips").fadeIn("slow").delay(2000).fadeOut(2000);
 
+    layer.alert('使用“W A S D” 来控制相机方向 , “Q E”控制高度', {
+      icon: 3
+    }); //这时如果你也还想执行yes回调，可以放在第三个参数中。
     canvas.setAttribute("tabindex", "0"); // needed to put focus on the canvas
     canvas.onclick = function () {
       canvas.focus();

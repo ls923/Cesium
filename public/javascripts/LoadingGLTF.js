@@ -1,7 +1,6 @@
 $(function () {
   $('.model_a').click(function () {
     searchAll_model()
-    loadingModel();
   })
 })
 
@@ -43,6 +42,15 @@ function pickNewPosition(model_id) {
   }
   layer.msg('鼠标左键选择Position，右键结束！', {
     anim: 0
+  }, function () {
+    layer.alert('change Position', {
+      area: ['100px'],
+      shade: 0,
+      title: 'Mode',
+      btn: [],
+      anim: 2,
+      offset: 'rb',
+    });
   });
 
   if (handler) {
@@ -53,6 +61,7 @@ function pickNewPosition(model_id) {
   }
   handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas)
   handler.setInputAction(function (event) {
+
     console.log("start click hander")
     var ray = viewer.camera.getPickRay(event.position)
     var position = viewer.scene.globe.pick(ray, viewer.scene);
@@ -132,7 +141,8 @@ function searchModelFromId(id) {
           id: items.model_id,
           name: items.model_name,
           position: positions.matrix,
-          url: items.model_url
+          url: items.model_url,
+          scale: items.scale,
         }
 
         drawModelByMatrix(item)
@@ -190,23 +200,6 @@ function drawModelByPosition(item) {
   )
 }
 // matrix draw model 
-function loadingModel() {
-  let mat = Cesium.Matrix4.fromArray(
-    [-0.20887267532031517, 0.4316032765917441, -0.8775481850814829, 0, -0.9001327727040177, -0.43561564653278606, -1.6120298639364106e-16, 0, -0.3822737200079432, 0.7899098810187737, 0.4794884595693575, 0, -2440072.637187522, 5042035.0278797895, 3040110.4597657737, 1]
-  )
-  var Option = Cesium.Model.fromGltf({
-    id: {
-      _id: item.id,
-      _name: item.name
-    },
-    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
-    allowPicking: true,
-    url: "../", // 如果为bgltf则为.bgltf
-    modelMatrix: mat,
-    scale: 1.0, // 放大倍数
-  })
-  var model = collection.add(Option)
-}
 
 function drawModelByMatrix(item) {
   var mat = Cesium.Matrix4.fromArray(item.position)
@@ -215,12 +208,13 @@ function drawModelByMatrix(item) {
       _id: item.id,
       _name: item.name
     },
-    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+    // heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
     allowPicking: true,
     url: item.url, // 如果为bgltf则为.bgltf
     modelMatrix: mat,
-    scale: 1.0, // 放大倍数
+    scale: item.scale, // 放大倍数
   })
+
   var model = collection.add(Option)
 }
 
@@ -321,6 +315,7 @@ function Opensetting(data, model) {
         Cesium.Matrix4.toArray(model.modelMatrix, a);
         console.log('a', a);
         updateMatrix(a, data.model_id)
+        handler.destroy
         model_setting = null;
       },
       btn3: function (index, layero) {
@@ -336,6 +331,7 @@ function Opensetting(data, model) {
         model_setting = null;
         if (Cesium.defined(handler)) {
           handler.destroy();
+
         }
 
         handler = null;
@@ -528,7 +524,19 @@ function searchAll_model() {
             offset: 't'
           })
         } else {
-          Opensetting(data, model);
+          layer.prompt({
+            formType: 1,
+            title: '请输入管理密码',
+          }, function (value, index, elem) {
+
+            if (value == '123456') {
+              Opensetting(data, model);
+              layer.close(index);
+            } else {
+              alert("error");
+            }
+          });
+
         }
       }
     });
@@ -577,26 +585,26 @@ viewer.screenSpaceEventHandler.setInputAction(function onMouseMove(movement) {
   nameOverlay.textContent = pickedFeature.id._name
 }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
 
-viewer.screenSpaceEventHandler.setInputAction(function onLeftClick(movement) {
-  // Pick a new feature
-  var pickedFeature = viewer.scene.pick(movement.position)
-  if (Cesium.defined(pickedFeature)) {
-    console.log(pickedFeature);
-    if (pickedFeature.id._id && pickedFeature.id._name) {
-      selectedEntity.description =
-        'Loading <div class="cesium-infoBox-loading"></div>'
-      viewer.selectedEntity = selectedEntity
-      selectedEntity.description =
-        '<table class="cesium-infoBox-defaultTable"><tbody>' +
-        '<tr><th>name</th><td>' +
-        pickedFeature.id._id +
-        '</td></tr>' +
-        '<tr><th>ID</th><td>' +
-        pickedFeature.id._name +
-        '</td></tr>' +
-        '</tbody></table>'
-    }
-  }
+// viewer.screenSpaceEventHandler.setInputAction(function onLeftClick(movement) {
+//   // Pick a new feature
+//   var pickedFeature = viewer.scene.pick(movement.position)
+//   if (Cesium.defined(pickedFeature)) {
+//     console.log(pickedFeature);
+//     if (pickedFeature.id._id && pickedFeature.id._name) {
+//       selectedEntity.description =
+//         'Loading <div class="cesium-infoBox-loading"></div>'
+//       viewer.selectedEntity = selectedEntity
+//       selectedEntity.description =
+//         '<table class="cesium-infoBox-defaultTable"><tbody>' +
+//         '<tr><th>name</th><td>' +
+//         pickedFeature.id._id +
+//         '</td></tr>' +
+//         '<tr><th>ID</th><td>' +
+//         pickedFeature.id._name +
+//         '</td></tr>' +
+//         '</tbody></table>'
+//     }
+//   }
 
 
-}, Cesium.ScreenSpaceEventType.LEFT_CLICK)
+// }, Cesium.ScreenSpaceEventType.LEFT_CLICK)

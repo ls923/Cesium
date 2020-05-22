@@ -2,7 +2,8 @@ const x_PI = 3.14159265358979324 * 3000.0 / 180.0;
 const PI = 3.1415926535897932384626; //圆周率
 const a = 6378245.0; //克拉索夫斯基椭球参数长半轴a
 const ee = 0.00669342162296594323; //克拉索夫斯基椭球参数第一偏心率平方
-//输入GCJ经纬度 转WGS纬度
+// 输入GCJ经纬度 转WGS纬度 
+// 经纬度
 function transformWD(lng, lat) {
     var ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + 0.1 * lng * lat + 0.2 * Math.sqrt(Math.abs(lng));
     ret += (20.0 * Math.sin(6.0 * lng * PI) + 20.0 * Math.sin(2.0 * lng * PI)) * 2.0 / 3.0;
