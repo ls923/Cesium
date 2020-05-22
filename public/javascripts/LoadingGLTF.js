@@ -1,6 +1,7 @@
 $(function () {
   $('.model_a').click(function () {
     searchAll_model()
+    loadingModel();
   })
 })
 
@@ -189,6 +190,24 @@ function drawModelByPosition(item) {
   )
 }
 // matrix draw model 
+function loadingModel() {
+  let mat = Cesium.Matrix4.fromArray(
+    [-0.20887267532031517, 0.4316032765917441, -0.8775481850814829, 0, -0.9001327727040177, -0.43561564653278606, -1.6120298639364106e-16, 0, -0.3822737200079432, 0.7899098810187737, 0.4794884595693575, 0, -2440072.637187522, 5042035.0278797895, 3040110.4597657737, 1]
+  )
+  var Option = Cesium.Model.fromGltf({
+    id: {
+      _id: item.id,
+      _name: item.name
+    },
+    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+    allowPicking: true,
+    url: "../", // 如果为bgltf则为.bgltf
+    modelMatrix: mat,
+    scale: 1.0, // 放大倍数
+  })
+  var model = collection.add(Option)
+}
+
 function drawModelByMatrix(item) {
   var mat = Cesium.Matrix4.fromArray(item.position)
   var Option = Cesium.Model.fromGltf({
